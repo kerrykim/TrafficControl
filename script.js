@@ -49,7 +49,7 @@ function handleSearch() {
     const selectedEmployee = searchEmployeeInput.value.trim();
     
     if (!selectedDate && !selectedEmployee) {
-        alert('날짜 또는 작성자를 입력해주세요.');
+        alert('차단일자 또는 작성자를 입력해주세요.');
         return;
     }
 
@@ -76,7 +76,7 @@ function filterData(searchDate, searchEmployee) {
         let employeeMatch = true;
         
         if (searchDate) {
-            dateMatch = item.inputdate === searchDate;
+            dateMatch = item.blockdate === searchDate;
         }
         
         if (searchEmployee) {
@@ -124,9 +124,9 @@ function showResults(results, searchDate, searchEmployee) {
     resultsHeader.classList.remove('hidden');
     let searchInfo = '';
     if (searchDate && searchEmployee) {
-        searchInfo = ` (날짜: ${formatDate(searchDate)}, 작성자: ${searchEmployee})`;
+        searchInfo = ` (차단일자: ${formatDate(searchDate)}, 작성자: ${searchEmployee})`;
     } else if (searchDate) {
-        searchInfo = ` (날짜: ${formatDate(searchDate)})`;
+        searchInfo = ` (차단일자: ${formatDate(searchDate)})`;
     } else if (searchEmployee) {
         searchInfo = ` (작성자: ${searchEmployee})`;
     }
