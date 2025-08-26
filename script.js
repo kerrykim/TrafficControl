@@ -1,5 +1,6 @@
 // DOM Elements
 const searchDateInput = document.getElementById('searchDate');
+const searchEmployeeInput = document.getElementById('searchEmployee');
 const searchBtn = document.getElementById('searchBtn');
 const clearBtn = document.getElementById('clearBtn');
 const loadingIndicator = document.getElementById('loadingIndicator');
@@ -25,6 +26,12 @@ function setupEventListeners() {
         }
     });
     
+    searchEmployeeInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            handleSearch();
+        }
+    });
+    
     // Auto-search when date changes
     searchDateInput.addEventListener('change', handleSearch);
 }
@@ -39,9 +46,10 @@ function setDefaultDate() {
 // Handle search functionality
 function handleSearch() {
     const selectedDate = searchDateInput.value;
+    const selectedEmployee = searchEmployeeInput.value.trim();
     
-    if (!selectedDate) {
-        alert('검색할 날짜를 선택해주세요.');
+    if (!selectedDate && !selectedEmployee) {
+        alert('날짜 또는 작성자를 입력해주세요.');
         return;
     }
 
@@ -49,26 +57,38 @@ function handleSearch() {
     
     // Simulate loading delay for better UX
     setTimeout(() => {
-        const results = filterDataByDate(selectedDate);
-        displayResults(results, selectedDate);
+        const results = filterData(selectedDate, selectedEmployee);
+        displayResults(results, selectedDate, selectedEmployee);
     }, 500);
 }
 
 // Handle clear functionality
 function handleClear() {
     searchDateInput.value = '';
+    searchEmployeeInput.value = '';
     hideAllSections();
 }
 
-// Filter data by input date
-function filterDataByDate(searchDate) {
+// Filter data by input date and/or employee
+function filterData(searchDate, searchEmployee) {
     return constructionData.filter(item => {
-        return item.inputdate === searchDate;
+        let dateMatch = true;
+        let employeeMatch = true;
+        
+        if (searchDate) {
+            dateMatch = item.inputdate === searchDate;
+        }
+        
+        if (searchEmployee) {
+            employeeMatch = item.employee && item.employee.toLowerCase().includes(searchEmployee.toLowerCase());
+        }
+        
+        return dateMatch && employeeMatch;
     });
 }
 
 // Display search results
-function displayResults(results, searchDate) {
+function displayResults(results, searchDate, searchEmployee) {
     hideLoading();
     
     if (results.length === 0) {
@@ -76,7 +96,7 @@ function displayResults(results, searchDate) {
         return;
     }
     
-    showResults(results, searchDate);
+    showResults(results, searchDate, searchEmployee);
 }
 
 // Show loading state
@@ -97,12 +117,20 @@ function showNoResults() {
 }
 
 // Show results
-function showResults(results, searchDate) {
+function showResults(results, searchDate, searchEmployee) {
     hideAllSections();
     
-    // Update results header
+    // Update results header with search criteria
     resultsHeader.classList.remove('hidden');
-    resultsCount.textContent = `${results.length}개의 공사 정보`;
+    let searchInfo = '';
+    if (searchDate && searchEmployee) {
+        searchInfo = ` (날짜: ${formatDate(searchDate)}, 작성자: ${searchEmployee})`;
+    } else if (searchDate) {
+        searchInfo = ` (날짜: ${formatDate(searchDate)})`;
+    } else if (searchEmployee) {
+        searchInfo = ` (작성자: ${searchEmployee})`;
+    }
+    resultsCount.textContent = `${results.length}개의 교통차단 정보${searchInfo}`;
     
     // Generate table rows
     generateTableRows(results);

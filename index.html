@@ -3,25 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>건설공사 데이터 검색</title>
+    <title>인천국제공항고속도로 교통차단</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1><i class="fas fa-hard-hat"></i> 건설공사 데이터 검색</h1>
-            <p>날짜를 선택하여 해당 날짜의 건설공사 정보를 확인하세요</p>
+            <h1><i class="fas fa-road"></i> 인천국제공항고속도로 교통차단</h1>
+            <p>날짜 또는 작성자를 입력하여 교통차단 정보를 확인하세요</p>
         </header>
 
         <div class="search-section">
             <div class="search-container">
-                <label for="searchDate">
-                    <i class="fas fa-calendar-alt"></i>
-                    검색 날짜
-                </label>
-                <div class="input-group">
-                    <input type="date" id="searchDate" placeholder="날짜를 선택하세요">
+                <div class="search-row">
+                    <div class="search-field">
+                        <label for="searchDate">
+                            <i class="fas fa-calendar-alt"></i>
+                            검색 날짜
+                        </label>
+                        <input type="date" id="searchDate" placeholder="날짜를 선택하세요">
+                    </div>
+                    <div class="search-field">
+                        <label for="searchEmployee">
+                            <i class="fas fa-user"></i>
+                            작성자
+                        </label>
+                        <input type="text" id="searchEmployee" placeholder="작성자명을 입력하세요">
+                    </div>
+                </div>
+                <div class="button-group">
                     <button id="searchBtn" class="search-btn">
                         <i class="fas fa-search"></i>
                         검색
@@ -48,7 +59,7 @@
             <div id="noResults" class="no-results hidden">
                 <i class="fas fa-search"></i>
                 <h3>검색 결과가 없습니다</h3>
-                <p>선택한 날짜에 해당하는 건설공사 데이터가 없습니다.</p>
+                <p>검색 조건에 해당하는 교통차단 데이터가 없습니다.</p>
             </div>
 
             <div id="resultsTable" class="table-container hidden">
@@ -82,7 +93,7 @@
     </div>
 
     <footer>
-        <p>&copy; 2025 건설공사 데이터 검색 시스템. 모든 권리 보유.</p>
+        <p>&copy; 2025 인천국제공항고속도로 교통차단 시스템. 모든 권리 보유.</p>
     </footer>
 
     <script src="data.js"></script>

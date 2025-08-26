@@ -1,4 +1,4 @@
-// Construction work data converted from TSV
+// Traffic control data for Incheon International Airport Expressway
 const constructionData = [
     {
         "inputdate": "2025-07-28",
@@ -1057,7 +1057,7 @@ const constructionData = [
     {
         "inputdate": "2025-08-25",
         "blockdate": "2025-08-26",
-        "const_name": "가변속도제한표지(VSL)  제조구매  철거 및 설치",
+        "const_name": "가변속도제한표지(VSL) 제조구매 철거 및 설치",
         "direction": "공항방향",
         "ieejung": "14.8k~12.5k (상부도로)",
         "chadantime": "09:00~17:00",
@@ -1176,7 +1176,7 @@ const constructionData = [
     {
         "inputdate": "2025-08-26",
         "blockdate": "2025-08-27",
-        "const_name": "가변속도제한표지(VSL)  제조구매  철거 및 설치",
+        "const_name": "가변속도제한표지(VSL) 제조구매 철거 및 설치",
         "direction": "공항방향",
         "ieejung": "13.0k~11.5k (상부도로), 10.3K~8.5K (본선)",
         "chadantime": "09:30~17:00",
@@ -1240,5 +1240,73 @@ const constructionData = [
         "contractee": "백양엔지니어링",
         "sitemanager": "이명우",
         "smcellphone": "010-2392-5168"
+    },
+    {
+        "inputdate": "2025-08-26",
+        "blockdate": "2025-08-27",
+        "const_name": "영종, 방화대교 정밀안전진단",
+        "direction": "양방향",
+        "ieejung": "10.0~15.0(하부도로)",
+        "chadantime": "09:00~18:00",
+        "chadan": "갓길",
+        "workers": 4,
+        "signcar": 2,
+        "workcar": 2,
+        "employee": "최종",
+        "employeephone": "010-6797-5516",
+        "contractee": "홍익기술단",
+        "sitemanager": "이경수",
+        "smcellphone": "010-9428-3658"
+    },
+    {
+        "inputdate": "2025-08-26",
+        "blockdate": "2025-08-27",
+        "const_name": "영종, 방화대교 정밀안전진단",
+        "direction": "양방향",
+        "ieejung": "11.5~12.2",
+        "chadantime": "09:00~18:00",
+        "chadan": "1차로",
+        "workers": 6,
+        "signcar": 5,
+        "workcar": 2,
+        "employee": "최종",
+        "employeephone": "010-6797-5516",
+        "contractee": "다음기술단",
+        "sitemanager": "정건우",
+        "smcellphone": "010-8447-4659"
+    },
+    {
+        "inputdate": "2025-08-26",
+        "blockdate": "2025-08-27",
+        "const_name": "설비유지관리용역",
+        "direction": "양방향",
+        "ieejung": "34.0~36.3",
+        "chadantime": "09:00~18:00",
+        "chadan": "갓길",
+        "workers": 4,
+        "signcar": 1,
+        "workcar": 1,
+        "employee": "최종",
+        "employeephone": "010-6797-5516",
+        "contractee": "대한곤돌라",
+        "sitemanager": "홍지환",
+        "smcellphone": "010-2124-3794"
+    },
+    {
+        "inputdate": "2025-08-26",
+        "blockdate": "2025-08-27",
+        "const_name": "차선도색공사",
+        "direction": "양방향",
+        "ieejung": "전구간",
+        "chadantime": "09:00~18:00",
+        "chadan": "1차로, 2차로, 3차로, 4차로",
+        "workers": 13,
+        "signcar": 3,
+        "workcar": 4,
+        "employee": "김도균",
+        "employeephone": "01031172297",
+        "contractee": "대한로드라인",
+        "sitemanager": "문학영",
+        "smcellphone": "01045376457"
     }
 ];

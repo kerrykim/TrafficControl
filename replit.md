@@ -1,8 +1,8 @@
-# Construction Work Data Search Application
+# Incheon International Airport Expressway Traffic Control Application
 
 ## Overview
 
-This is a Korean construction work data search application that allows users to search and view construction project information by date. The application displays construction work details including project names, locations, workers, contractors, and contact information. It features a clean, modern web interface with Korean language support and construction-themed styling.
+This is a Korean traffic control data search application for Incheon International Airport Expressway that allows users to search and view traffic control information by date and/or employee name. The application displays traffic control details including project names, locations, workers, contractors, and contact information. It features a clean, modern web interface with Korean language support and road-themed styling.
 
 ## User Preferences
 
@@ -22,13 +22,13 @@ Preferred communication style: Simple, everyday language.
 - **No Backend Required**: All data processing happens in the browser
 
 ### Core Components
-- **Search Interface**: Date picker with auto-search functionality and manual search/clear buttons
-- **Results Display**: Dynamic table generation showing filtered construction work data
+- **Search Interface**: Date picker and employee name input with search/clear buttons
+- **Results Display**: Dynamic table generation showing filtered traffic control data
 - **Loading States**: User feedback during search operations with loading indicators
 - **Error Handling**: No results state with appropriate messaging
 
 ### Data Structure
-The application handles construction work records with the following key fields:
+The application handles traffic control records with the following key fields:
 - Date information (input date, block date)
 - Project details (construction name, direction, location)
 - Resource allocation (workers, vehicles, equipment)
