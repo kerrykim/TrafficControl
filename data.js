@@ -1,4 +1,4 @@
-// Traffic control data for Incheon International Airport Expressway
+// Traffic control data for Incheon International Airport Expressway from Google Sheets
 const constructionData = [
     {
         "inputdate": "2025-07-28",
@@ -1308,5 +1308,56 @@ const constructionData = [
         "contractee": "대한로드라인",
         "sitemanager": "문학영",
         "smcellphone": "01045376457"
+    },
+    {
+        "inputdate": "2025-08-26",
+        "blockdate": "2025-08-27",
+        "const_name": "가로등 누전선로 보수공사(2025년",
+        "direction": "서울방향",
+        "ieejung": "9.5K ~ 10.25K",
+        "chadantime": "09:00 ~ 17:00",
+        "chadan": "갓길",
+        "workers": 4,
+        "signcar": 2,
+        "workcar": 0,
+        "employee": "고영우",
+        "employeephone": "010-5267-1669",
+        "contractee": "두복산전",
+        "sitemanager": "박상윤 소장",
+        "smcellphone": "010-2337-1524"
+    },
+    {
+        "inputdate": "2025-08-26",
+        "blockdate": "2025-08-27",
+        "const_name": "영종대교 사설항로표지설비 점검",
+        "direction": "양방향",
+        "ieejung": "11.5∼14.8k (영종대교하부도로)(영종대교상부도로 비상주차대)",
+        "chadantime": "09:00 ~ 18:00",
+        "chadan": "갓길",
+        "workers": 4,
+        "signcar": 1,
+        "workcar": 1,
+        "employee": "고영우",
+        "employeephone": "010-5267-1669",
+        "contractee": "뉴마린엔지니어링",
+        "sitemanager": "박효종",
+        "smcellphone": "010-5203-4722"
+    },
+    {
+        "inputdate": "2025-08-26",
+        "blockdate": "2025-08-27",
+        "const_name": "테스트",
+        "direction": "테스트",
+        "ieejung": "테스트",
+        "chadantime": "테스",
+        "chadan": "",
+        "workers": "",
+        "signcar": "",
+        "workcar": "",
+        "employee": "김현호",
+        "employeephone": "",
+        "contractee": "",
+        "sitemanager": "",
+        "smcellphone": ""
     }
 ];
