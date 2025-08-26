@@ -110,7 +110,7 @@ header p {
     box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
-.search-btn, .clear-btn {
+.search-btn, .refresh-btn, .clear-btn {
     padding: 15px 25px;
     border: none;
     border-radius: 8px;
@@ -131,6 +131,16 @@ header p {
 .search-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.refresh-btn {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+}
+
+.refresh-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
 }
 
 .clear-btn {

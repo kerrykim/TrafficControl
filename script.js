@@ -2,6 +2,7 @@
 const searchDateInput = document.getElementById('searchDate');
 const searchEmployeeInput = document.getElementById('searchEmployee');
 const searchBtn = document.getElementById('searchBtn');
+const refreshBtn = document.getElementById('refreshBtn');
 const clearBtn = document.getElementById('clearBtn');
 const loadingIndicator = document.getElementById('loadingIndicator');
 const resultsHeader = document.getElementById('resultsHeader');
@@ -11,14 +12,23 @@ const resultsTable = document.getElementById('resultsTable');
 const tableBody = document.getElementById('tableBody');
 
 // Initialize the application
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
     setupEventListeners();
     setDefaultDate();
+    
+    // Load initial data from Google Sheets
+    try {
+        await loadDataFromGoogleSheets();
+        console.log('Initial data loaded successfully');
+    } catch (error) {
+        console.error('Failed to load initial data:', error);
+    }
 });
 
 // Setup event listeners
 function setupEventListeners() {
     searchBtn.addEventListener('click', handleSearch);
+    refreshBtn.addEventListener('click', handleRefresh);
     clearBtn.addEventListener('click', handleClear);
     searchDateInput.addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
@@ -44,7 +54,7 @@ function setDefaultDate() {
 }
 
 // Handle search functionality
-function handleSearch() {
+async function handleSearch() {
     const selectedDate = searchDateInput.value;
     const selectedEmployee = searchEmployeeInput.value.trim();
     
@@ -55,11 +65,48 @@ function handleSearch() {
 
     showLoading();
     
-    // Simulate loading delay for better UX
-    setTimeout(() => {
+    try {
+        // Always refresh data from Google Sheets before searching
+        await refreshData();
+        
         const results = filterData(selectedDate, selectedEmployee);
         displayResults(results, selectedDate, selectedEmployee);
-    }, 500);
+    } catch (error) {
+        console.error('Error during search:', error);
+        hideLoading();
+        alert('데이터를 불러오는 중 오류가 발생했습니다. 다시 시도해주세요.');
+    }
+}
+
+// Handle refresh functionality
+async function handleRefresh() {
+    const refreshIcon = refreshBtn.querySelector('i');
+    refreshIcon.classList.add('fa-spin');
+    refreshBtn.disabled = true;
+    
+    try {
+        await refreshData();
+        
+        // Show success feedback
+        refreshBtn.innerHTML = '<i class="fas fa-check"></i> 완료';
+        setTimeout(() => {
+            refreshBtn.innerHTML = '<i class="fas fa-sync-alt"></i> 새로고침';
+            refreshBtn.disabled = false;
+        }, 1500);
+        
+        console.log('Data refreshed successfully');
+    } catch (error) {
+        console.error('Error refreshing data:', error);
+        
+        // Show error feedback
+        refreshBtn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> 오류';
+        setTimeout(() => {
+            refreshBtn.innerHTML = '<i class="fas fa-sync-alt"></i> 새로고침';
+            refreshBtn.disabled = false;
+        }, 2000);
+        
+        alert('데이터 새로고침 중 오류가 발생했습니다.');
+    }
 }
 
 // Handle clear functionality
