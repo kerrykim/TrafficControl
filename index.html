@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>건설공사 데이터 검색</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-hard-hat"></i> 건설공사 데이터 검색</h1>
+            <p>날짜를 선택하여 해당 날짜의 건설공사 정보를 확인하세요</p>
+        </header>
+
+        <div class="search-section">
+            <div class="search-container">
+                <label for="searchDate">
+                    <i class="fas fa-calendar-alt"></i>
+                    검색 날짜
+                </label>
+                <div class="input-group">
+                    <input type="date" id="searchDate" placeholder="날짜를 선택하세요">
+                    <button id="searchBtn" class="search-btn">
+                        <i class="fas fa-search"></i>
+                        검색
+                    </button>
+                    <button id="clearBtn" class="clear-btn">
+                        <i class="fas fa-times"></i>
+                        초기화
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="results-section">
+            <div id="loadingIndicator" class="loading hidden">
+                <i class="fas fa-spinner fa-spin"></i>
+                데이터를 검색하고 있습니다...
+            </div>
+
+            <div id="resultsHeader" class="results-header hidden">
+                <h2>검색 결과</h2>
+                <span id="resultsCount" class="results-count"></span>
+            </div>
+
+            <div id="noResults" class="no-results hidden">
+                <i class="fas fa-search"></i>
+                <h3>검색 결과가 없습니다</h3>
+                <p>선택한 날짜에 해당하는 건설공사 데이터가 없습니다.</p>
+            </div>
+
+            <div id="resultsTable" class="table-container hidden">
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>입력날짜</th>
+                                <th>차단날짜</th>
+                                <th>공사명</th>
+                                <th>방향</th>
+                                <th>위치</th>
+                                <th>차단시간</th>
+                                <th>차단구간</th>
+                                <th>작업자</th>
+                                <th>신호차</th>
+                                <th>작업차</th>
+                                <th>담당자</th>
+                                <th>담당자연락처</th>
+                                <th>계약업체</th>
+                                <th>현장관리자</th>
+                                <th>관리자연락처</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 건설공사 데이터 검색 시스템. 모든 권리 보유.</p>
+    </footer>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
