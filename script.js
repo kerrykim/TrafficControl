@@ -194,8 +194,6 @@ function generateTableRows(results) {
         const row = document.createElement('tr');
         
         row.innerHTML = `
-            <td>${formatDate(item.inputdate)}</td>
-            <td>${formatDate(item.blockdate)}</td>
             <td class="construction-name">${escapeHtml(item.const_name)}</td>
             <td>${escapeHtml(item.direction)}</td>
             <td>${escapeHtml(item.ieejung)}</td>
