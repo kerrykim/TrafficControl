@@ -456,6 +456,16 @@ button:focus, input:focus {
         padding-bottom: 10px !important;
         border-bottom: 2px solid #333 !important;
         display: block !important;
+        text-align: center !important;
+    }
+    
+    .results-header::before {
+        content: "인천국제공항고속도로 교통차단 계획";
+        display: block;
+        font-size: 28px !important;
+        font-weight: bold !important;
+        margin-bottom: 10px !important;
+        color: #333 !important;
     }
 
     .results-header h2 {
@@ -508,7 +518,7 @@ button:focus, input:focus {
         white-space: normal !important;
         word-break: break-all !important;
         word-wrap: break-word !important;
-        max-width: 200px !important;
+        max-width: 250px !important;
         min-width: 60px !important;
     }
 
@@ -517,6 +527,7 @@ button:focus, input:focus {
         background: #f0f0f0 !important;
         color: black !important;
         position: static !important;
+        text-align: center !important;
     }
 
     tbody tr:nth-child(even) {

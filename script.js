@@ -141,7 +141,7 @@ async function handleShowByDate() {
         showResults(results, selectedDate, '');
         
         // Update results header
-        resultsCount.textContent = `${formatDateKorean(selectedDate)}의 인천국제공항고속도로 교통차단계획`;
+        resultsCount.textContent = formatDateSimple(selectedDate);
         
         // Print the results
         setTimeout(() => {
@@ -235,7 +235,7 @@ function showResults(results, searchDate, searchEmployee) {
     
     // 날짜만 검색된 경우 특별한 형식으로 표시
     if (searchDate && !searchEmployee) {
-        resultsCount.textContent = `${formatDateKorean(searchDate)}의 인천국제공항고속도로 교통차단계획`;
+        resultsCount.textContent = formatDateSimple(searchDate);
     } else {
         // 다른 검색 조건들
         let searchInfo = '';
@@ -315,6 +315,21 @@ function formatDateKorean(dateString) {
         const month = date.getMonth() + 1;
         const day = date.getDate();
         return `${year}년 ${month}월 ${day}일`;
+    } catch (e) {
+        return dateString;
+    }
+}
+
+// Format date for simple display (yyyy-m-d)
+function formatDateSimple(dateString) {
+    if (!dateString) return '-';
+    
+    try {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1;
+        const day = date.getDate();
+        return `${year}-${month}-${day}`;
     } catch (e) {
         return dateString;
     }
