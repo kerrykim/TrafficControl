@@ -2,7 +2,7 @@
 const searchDateInput = document.getElementById('searchDate');
 const searchEmployeeInput = document.getElementById('searchEmployee');
 const searchBtn = document.getElementById('searchBtn');
-const showAllBtn = document.getElementById('showAllBtn');
+const showDateBtn = document.getElementById('showDateBtn');
 const refreshBtn = document.getElementById('refreshBtn');
 const clearBtn = document.getElementById('clearBtn');
 const loadingIndicator = document.getElementById('loadingIndicator');
@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 // Setup event listeners
 function setupEventListeners() {
     searchBtn.addEventListener('click', handleSearch);
-    showAllBtn.addEventListener('click', handleShowAll);
+    showDateBtn.addEventListener('click', handleShowByDate);
     refreshBtn.addEventListener('click', handleRefresh);
     clearBtn.addEventListener('click', handleClear);
     searchDateInput.addEventListener('keypress', function(e) {
@@ -111,29 +111,39 @@ async function handleRefresh() {
     }
 }
 
-// Handle show all functionality
-async function handleShowAll() {
+// Handle show by date functionality
+async function handleShowByDate() {
+    const selectedDate = searchDateInput.value;
+    
+    if (!selectedDate) {
+        alert('차단일자를 선택해주세요.');
+        return;
+    }
+    
     showLoading();
     
     try {
-        // Refresh data from Google Sheets before showing all
+        // Refresh data from Google Sheets before showing data
         await refreshData();
         
-        if (constructionData.length === 0) {
+        // Filter data by selected date
+        const results = filterData(selectedDate, '');
+        
+        if (results.length === 0) {
             hideLoading();
             showNoResults();
             return;
         }
         
-        // Display all data
+        // Display filtered data
         hideLoading();
-        showResults(constructionData, '', '');
+        showResults(results, selectedDate, '');
         
-        // Update results header for show all
-        resultsCount.textContent = `전체 ${constructionData.length}개의 교통차단정보`;
+        // Update results header
+        resultsCount.textContent = `${formatDate(selectedDate)} 날짜의 ${results.length}개 교통차단정보`;
         
     } catch (error) {
-        console.error('Error showing all data:', error);
+        console.error('Error showing date data:', error);
         hideLoading();
         alert('데이터를 불러오는 중 오류가 발생했습니다. 다시 시도해주세요.');
     }

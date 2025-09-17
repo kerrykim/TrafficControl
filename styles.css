@@ -110,7 +110,7 @@ header p {
     box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
-.search-btn, .show-all-btn, .refresh-btn, .clear-btn {
+.search-btn, .show-date-btn, .refresh-btn, .clear-btn {
     padding: 15px 25px;
     border: none;
     border-radius: 8px;
@@ -133,12 +133,12 @@ header p {
     box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
 }
 
-.show-all-btn {
+.show-date-btn {
     background: linear-gradient(135deg, #17a2b8, #138496);
     color: white;
 }
 
-.show-all-btn:hover {
+.show-date-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(23, 162, 184, 0.4);
 }
@@ -316,7 +316,7 @@ footer {
         flex-direction: column;
     }
 
-    .search-btn, .show-all-btn, .refresh-btn, .clear-btn {
+    .search-btn, .show-date-btn, .refresh-btn, .clear-btn {
         width: 100%;
         margin-bottom: 10px;
     }
