@@ -132,6 +132,7 @@ async function handleShowByDate() {
         if (results.length === 0) {
             hideLoading();
             showNoResults();
+            alert('선택한 날짜에 교통차단 정보가 없습니다.');
             return;
         }
         
@@ -142,11 +143,33 @@ async function handleShowByDate() {
         // Update results header
         resultsCount.textContent = `${formatDateKorean(selectedDate)}의 인천국제공항고속도로 교통차단계획`;
         
+        // Print the results
+        setTimeout(() => {
+            printResults(selectedDate, results);
+        }, 500); // 데이터 표시 후 잠시 기다린 다음 프린트
+        
     } catch (error) {
         console.error('Error showing date data:', error);
         hideLoading();
         alert('데이터를 불러오는 중 오류가 발생했습니다. 다시 시도해주세요.');
     }
+}
+
+// Print results function
+function printResults(selectedDate, results) {
+    // 프린트용 페이지 제목 설정
+    const originalTitle = document.title;
+    document.title = `${formatDateKorean(selectedDate)}의 인천국제공항고속도로 교통차단계획`;
+    
+    // 프린트용 클래스 추가
+    document.body.classList.add('print-mode');
+    
+    // 프린트 실행
+    window.print();
+    
+    // 프린트 후 원래 상태로 복원
+    document.title = originalTitle;
+    document.body.classList.remove('print-mode');
 }
 
 // Handle clear functionality
