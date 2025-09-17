@@ -258,26 +258,46 @@ function showResults(results, searchDate, searchEmployee) {
 function generateTableRows(results) {
     tableBody.innerHTML = '';
     
+    // Group results by construction name for merging
+    const groupedResults = {};
     results.forEach(item => {
-        const row = document.createElement('tr');
-        
-        row.innerHTML = `
-            <td class="construction-name">${escapeHtml(item.const_name)}</td>
-            <td>${escapeHtml(item.direction)}</td>
-            <td>${escapeHtml(item.ieejung)}</td>
-            <td>${escapeHtml(item.chadantime)}</td>
-            <td>${formatChadan(item.chadan)}</td>
-            <td class="workers-count">${item.workers}</td>
-            <td class="vehicle-count">${item.signcar}</td>
-            <td class="vehicle-count">${item.workcar}</td>
-            <td>${escapeHtml(item.employee)}</td>
-            <td class="phone">${formatPhone(item.employeephone)}</td>
-            <td>${escapeHtml(item.contractee)}</td>
-            <td>${escapeHtml(item.sitemanager)}</td>
-            <td class="phone">${formatPhone(item.smcellphone)}</td>
-        `;
-        
-        tableBody.appendChild(row);
+        const key = item.const_name;
+        if (!groupedResults[key]) {
+            groupedResults[key] = [];
+        }
+        groupedResults[key].push(item);
+    });
+    
+    Object.entries(groupedResults).forEach(([constName, items]) => {
+        items.forEach((item, index) => {
+            const row = document.createElement('tr');
+            
+            // Create cells based on the new structure
+            let rowHTML = '';
+            
+            // Only show construction name, direction, location in first row of each group
+            if (index === 0) {
+                rowHTML += `
+                    <td class="construction-name" rowspan="${items.length}">${escapeHtml(item.const_name)}</td>
+                    <td rowspan="${items.length}">${escapeHtml(item.direction)}</td>
+                    <td rowspan="${items.length}">${escapeHtml(item.ieejung)}</td>
+                `;
+            }
+            
+            rowHTML += `
+                <td>${escapeHtml(item.chadantime)}</td>
+                <td>${formatChadan(item.chadan)}</td>
+                <td class="vehicle-count">${item.signcar}</td>
+                <td>${escapeHtml(item.employee)}</td>
+                <td class="phone">${formatPhone(item.employeephone)}</td>
+                <td>${escapeHtml(item.contractee)}<br/>${escapeHtml(item.sitemanager)}</td>
+                <td class="phone">${formatPhone(item.smcellphone)}</td>
+                <td>정상</td>
+            `;
+            
+            row.innerHTML = rowHTML;
+            tableBody.appendChild(row);
+        });
     });
 }
 
