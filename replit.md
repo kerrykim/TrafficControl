@@ -56,3 +56,17 @@ The application handles traffic control records with the following key fields:
 - Modern browser support for ES6+ features
 - Date input type support for the search functionality
 - CSS Grid and Flexbox support for responsive layout
+
+## Recent Changes
+
+### 2025-09-17: Print/Output Feature Implementation
+- Added print/output button with printer icon for A4 landscape format printing
+- Implemented print functionality with Korean date formatting (yyyy년 m월 d일)
+- Enhanced print styles with proper header formatting and column width controls
+- Configured specific columns (차단시간, 담당자연락처, 관리자연락처) to prevent line breaks
+- Header displays in single line with center alignment
+- Date display uses left alignment in print output
+- Footer includes "Made by 김현호" attribution
+
+## Notes
+- GitHub integration was declined by user - manual git operations may be needed for version control
