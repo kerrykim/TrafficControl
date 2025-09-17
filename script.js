@@ -141,7 +141,7 @@ async function handleShowByDate() {
         showResults(results, selectedDate, '');
         
         // Update results header
-        resultsCount.textContent = formatDateSimple(selectedDate);
+        resultsCount.textContent = formatDateKorean(selectedDate);
         
         // Print the results
         setTimeout(() => {
@@ -235,7 +235,7 @@ function showResults(results, searchDate, searchEmployee) {
     
     // 날짜만 검색된 경우 특별한 형식으로 표시
     if (searchDate && !searchEmployee) {
-        resultsCount.textContent = formatDateSimple(searchDate);
+        resultsCount.textContent = formatDateKorean(searchDate);
     } else {
         // 다른 검색 조건들
         let searchInfo = '';
