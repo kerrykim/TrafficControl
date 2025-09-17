@@ -232,15 +232,20 @@ function showResults(results, searchDate, searchEmployee) {
     
     // Update results header with search criteria
     resultsHeader.classList.remove('hidden');
-    let searchInfo = '';
-    if (searchDate && searchEmployee) {
-        searchInfo = ` (차단일자: ${formatDate(searchDate)}, 작성자: ${searchEmployee})`;
-    } else if (searchDate) {
-        searchInfo = ` (차단일자: ${formatDate(searchDate)})`;
-    } else if (searchEmployee) {
-        searchInfo = ` (작성자: ${searchEmployee})`;
+    
+    // 날짜만 검색된 경우 특별한 형식으로 표시
+    if (searchDate && !searchEmployee) {
+        resultsCount.textContent = `${formatDateKorean(searchDate)}의 인천국제공항고속도로 교통차단계획`;
+    } else {
+        // 다른 검색 조건들
+        let searchInfo = '';
+        if (searchDate && searchEmployee) {
+            searchInfo = ` (차단일자: ${formatDate(searchDate)}, 작성자: ${searchEmployee})`;
+        } else if (searchEmployee) {
+            searchInfo = ` (작성자: ${searchEmployee})`;
+        }
+        resultsCount.textContent = `교통차단 ${results.length}건${searchInfo}`;
     }
-    resultsCount.textContent = `교통차단 ${results.length}건${searchInfo}`;
     
     // Generate table rows
     generateTableRows(results);
