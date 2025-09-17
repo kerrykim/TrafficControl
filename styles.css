@@ -134,13 +134,13 @@ header p {
 }
 
 .show-date-btn {
-    background: linear-gradient(135deg, #17a2b8, #138496);
+    background: linear-gradient(135deg, #9b59b6, #8e44ad);
     color: white;
 }
 
 .show-date-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(23, 162, 184, 0.4);
+    box-shadow: 0 5px 15px rgba(155, 89, 182, 0.4);
 }
 
 .refresh-btn {
