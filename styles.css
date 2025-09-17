@@ -532,23 +532,26 @@ button:focus, input:focus {
         display: none !important;
     }
     
-    /* 차단시간 컬럼 폭 조정 */
+    /* 차단시간 컬럼 최소 폭 */
     table th:nth-child(4), table td:nth-child(4) { /* 차단시간 */
         white-space: nowrap !important;
         word-break: normal !important;
         word-wrap: normal !important;
-        min-width: 90px !important;
-        max-width: 100px !important;
-        width: 100px !important;
+        min-width: 70px !important;
+        max-width: 80px !important;
+        width: 80px !important;
+        font-size: 10px !important;
     }
     
-    /* 관리자연락처 컬럼 줄바꿈 방지 */
+    /* 관리자연락처 컬럼 최소 폭 */
     table th:nth-child(13), table td:nth-child(13) { /* 관리자연락처 */
         white-space: nowrap !important;
         word-break: normal !important;
         word-wrap: normal !important;
-        min-width: 120px !important;
-        max-width: 200px !important;
+        min-width: 85px !important;
+        max-width: 95px !important;
+        width: 95px !important;
+        font-size: 10px !important;
     }
 
     th {
