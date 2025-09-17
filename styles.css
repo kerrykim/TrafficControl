@@ -525,31 +525,13 @@ button:focus, input:focus {
     
     /* 특정 컬럼들 줄바꿈 방지 */
     table th:nth-child(4), table td:nth-child(4), /* 차단시간 */
-    table th:nth-child(8), table td:nth-child(8), /* 담당자연락처 */
-    table th:nth-child(10), table td:nth-child(10) { /* 관리자연락처 */
+    table th:nth-child(10), table td:nth-child(10), /* 담당자연락처 */
+    table th:nth-child(13), table td:nth-child(13) { /* 관리자연락처 */
         white-space: nowrap !important;
         word-break: normal !important;
         word-wrap: normal !important;
         min-width: 120px !important;
         max-width: 200px !important;
-    }
-    
-    /* 헤더 병합 스타일 */
-    table th[colspan] {
-        text-align: center !important;
-        border-bottom: 1px solid #333 !important;
-    }
-    
-    table th[rowspan] {
-        vertical-align: middle !important;
-        text-align: center !important;
-    }
-    
-    /* 공사명 컬럼 세로 중앙 정렬 */
-    table td[rowspan] {
-        vertical-align: middle !important;
-        text-align: center !important;
-        border-right: 2px solid #333 !important;
     }
 
     th {
