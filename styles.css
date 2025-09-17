@@ -523,9 +523,17 @@ button:focus, input:focus {
         min-width: 60px !important;
     }
     
+    /* 출력물에서 특정 컬럼들 숨김 */
+    table th:nth-child(6), table td:nth-child(6), /* 작업자 */
+    table th:nth-child(7), table td:nth-child(7), /* 신호차 */
+    table th:nth-child(8), table td:nth-child(8), /* 작업차 */
+    table th:nth-child(9), table td:nth-child(9), /* 담당자 */
+    table th:nth-child(10), table td:nth-child(10) { /* 담당자연락처 */
+        display: none !important;
+    }
+    
     /* 특정 컬럼들 줄바꿈 방지 */
     table th:nth-child(4), table td:nth-child(4), /* 차단시간 */
-    table th:nth-child(10), table td:nth-child(10), /* 담당자연락처 */
     table th:nth-child(13), table td:nth-child(13) { /* 관리자연락처 */
         white-space: nowrap !important;
         word-break: normal !important;
