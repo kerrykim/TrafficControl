@@ -528,6 +528,9 @@ button:focus, input:focus {
         color: black !important;
         position: static !important;
         text-align: center !important;
+        white-space: nowrap !important;
+        word-break: normal !important;
+        word-wrap: normal !important;
     }
 
     tbody tr:nth-child(even) {
