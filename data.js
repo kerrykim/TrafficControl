@@ -1,73 +1,38 @@
-// Traffic control data for Incheon International Airport Expressway from Google Sheets
-// This will be populated dynamically from Google Sheets
+// Traffic control data from Supabase
 let constructionData = [];
 
-// Google Sheets URL for CSV export
-const GOOGLE_SHEETS_CSV_URL = 'https://docs.google.com/spreadsheets/d/10R8pLgJmujkO6yiVR59ZqOe_qyQKcRMv4fh_C47BjqM/export?format=csv&gid=0';
-
-// Function to parse CSV data
-function parseCSV(csvText) {
-    const lines = csvText.split('\n');
-    const headers = lines[0].split(',');
-    const data = [];
-    
-    for (let i = 1; i < lines.length; i++) {
-        if (lines[i].trim() === '') continue;
-        
-        const values = [];
-        let current = '';
-        let inQuotes = false;
-        
-        for (let j = 0; j < lines[i].length; j++) {
-            const char = lines[i][j];
-            
-            if (char === '"') {
-                inQuotes = !inQuotes;
-            } else if (char === ',' && !inQuotes) {
-                values.push(current.trim());
-                current = '';
-            } else {
-                current += char;
-            }
-        }
-        values.push(current.trim()); // Add the last value
-        
-        if (values.length >= headers.length) {
-            const row = {};
-            headers.forEach((header, index) => {
-                let value = values[index] || '';
-                // Clean up the value
-                value = value.replace(/^["']|["']$/g, ''); // Remove quotes
-                
-                // Convert numeric values
-                if (header === 'workers' || header === 'signcar' || header === 'workcar') {
-                    value = parseInt(value) || 0;
-                }
-                
-                row[header.trim()] = value;
-            });
-            data.push(row);
-        }
-    }
-    
-    return data;
-}
-
-// Function to load data from Google Sheets
-async function loadDataFromGoogleSheets() {
+// Function to load data from Supabase
+async function loadDataFromSupabase() {
     try {
-        const response = await fetch(GOOGLE_SHEETS_CSV_URL);
-        if (!response.ok) {
-            throw new Error('Failed to fetch data from Google Sheets');
+        // 1달(30일) 이전 데이터는 클라이언트 측에서 로드할 때 삭제 요청을 트리거하여 자동 제거
+        const oneMonthAgo = new Date();
+        oneMonthAgo.setDate(oneMonthAgo.getDate() - 30);
+        const cutoffDateStr = oneMonthAgo.toISOString().split('T')[0];
+        
+        // 백그라운드에서 오래된 데이터 삭제 (기다리지 않음)
+        supabaseClient.from('traffic_plans')
+            .delete()
+            .lt('blockdate', cutoffDateStr)
+            .then(({ error }) => {
+                if(error) console.error("오래된 데이터 삭제 실패:", error);
+            });
+
+        // 데이터 조회 (차단일자 및 차단시간 빠른 순 정렬)
+        const { data, error } = await supabaseClient
+            .from('traffic_plans')
+            .select('*')
+            .order('blockdate', { ascending: true })
+            .order('chadantime', { ascending: true });
+
+        if (error) {
+            throw error;
         }
-        
-        const csvText = await response.text();
-        constructionData = parseCSV(csvText);
-        
-        console.log('Data loaded from Google Sheets:', constructionData.length, 'records');
+
+        constructionData = data || [];
+        console.log('Data loaded from Supabase:', constructionData.length, 'records');
         return constructionData;
     } catch (error) {
-        console.error('Error loading data from Google Sheets:', error);
+        console.error('Error loading data from Supabase:', error);
         // Fallback to empty array if loading fails
         constructionData = [];
         return constructionData;
@@ -76,10 +41,10 @@ async function loadDataFromGoogleSheets() {
 
 // Load data when the page loads
 document.addEventListener('DOMContentLoaded', function() {
-    loadDataFromGoogleSheets();
+    loadDataFromSupabase();
 });
 
-// Function to refresh data manually
+// Function to refresh data manually (called by script.js)
 function refreshData() {
-    return loadDataFromGoogleSheets();
+    return loadDataFromSupabase();
 }
