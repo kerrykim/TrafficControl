@@ -1,4 +1,8 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    // 로그인 상태 확인 - 미인증 시 login.html로 이동
+    const user = await requireAuth();
+    if (!user) return;
+
     const registerForm = document.getElementById('registerForm');
     
     // 기본 날짜를 다음 영업일로 설정 (대한민국 기준, 주말 및 공휴일 제외)

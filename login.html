@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로그인 - 인천국제공항고속도로 교통차단 관리</title>
+    <link rel="stylesheet" href="styles.css?v=4">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .login-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .login-card {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .login-card header {
+            margin-bottom: 30px;
+        }
+        .login-card header h1 {
+            font-size: 1.8rem;
+            color: #333;
+            text-shadow: none;
+        }
+        .login-card header h1 i {
+            color: #667eea;
+            margin-right: 10px;
+        }
+        .login-card header p {
+            color: #6c757d;
+            font-size: 0.95rem;
+        }
+        .login-field {
+            margin-bottom: 20px;
+        }
+        .login-field label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #555;
+            font-size: 1rem;
+        }
+        .login-field input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+            font-family: inherit;
+        }
+        .login-field input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        .login-error {
+            color: #dc3545;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            display: none;
+        }
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .login-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-wrapper">
+        <div class="login-card">
+            <header>
+                <h1><i class="fas fa-lock"></i> 로그인</h1>
+                <p>인천국제공항고속도로 교통차단 관리 시스템</p>
+            </header>
+
+            <form id="loginForm">
+                <div class="login-field">
+                    <label for="email"><i class="fas fa-envelope"></i> 이메일</label>
+                    <input type="email" id="email" name="email" placeholder="이메일을 입력하세요" required>
+                </div>
+                <div class="login-field">
+                    <label for="password"><i class="fas fa-key"></i> 비밀번호</label>
+                    <input type="password" id="password" name="password" placeholder="비밀번호를 입력하세요" required>
+                </div>
+                <div id="loginError" class="login-error"></div>
+                <button type="submit" class="login-btn" id="loginBtn">
+                    <i class="fas fa-sign-in-alt"></i> 로그인
+                </button>
+            </form>
+
+            <div class="login-link">
+                <a href="index.html"><i class="fas fa-arrow-left"></i> 메인 페이지로 돌아가기</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabaseConfig.js"></script>
+    <script src="auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            // 이미 로그인된 사용자는 register.html로 이동
+            const user = await getCurrentUser();
+            if (user) {
+                window.location.href = 'register.html';
+                return;
+            }
+
+            const loginForm = document.getElementById('loginForm');
+            const loginBtn = document.getElementById('loginBtn');
+            const loginError = document.getElementById('loginError');
+
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const email = document.getElementById('email').value.trim();
+                const password = document.getElementById('password').value;
+
+                // 입력값 유효성 검사
+                if (!email || !password) {
+                    loginError.textContent = '이메일과 비밀번호를 모두 입력해주세요.';
+                    loginError.style.display = 'block';
+                    return;
+                }
+
+                loginBtn.disabled = true;
+                loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 로그인 중...';
+                loginError.style.display = 'none';
+
+                try {
+                    // Supabase Auth 로그인
+                    const { data, error } = await supabaseClient.auth.signInWithPassword({
+                        email: email,
+                        password: password
+                    });
+
+                    if (error) {
+                        throw error;
+                    }
+
+                    // 로그인 성공 - register.html로 이동
+                    window.location.href = 'register.html';
+                } catch (error) {
+                    console.error('로그인 오류:', error);
+                    loginError.textContent = '로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요.';
+                    loginError.style.display = 'block';
+                    loginBtn.disabled = false;
+                    loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> 로그인';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
