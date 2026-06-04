@@ -275,10 +275,102 @@ function generateTableRows(results) {
             <td>${escapeHtml(item.contractee)}</td>
             <td>${escapeHtml(item.sitemanager)}</td>
             <td class="phone">${formatPhone(item.smcellphone)}</td>
+            <td class="action-buttons">
+                <button class="edit-btn" onclick="editPlan(${item.id})"><i class="fas fa-edit"></i> 수정</button>
+                <button class="delete-btn" onclick="deletePlan(${item.id})"><i class="fas fa-trash"></i> 삭제</button>
+            </td>
         `;
         
         tableBody.appendChild(row);
     });
+}
+
+function getPin() {
+    let pin = sessionStorage.getItem('tc_pin');
+    if (!pin) {
+        pin = prompt('수정/삭제 비밀번호 (4자리 숫자)를 입력하세요.');
+        if (pin && /^\d{4}$/.test(pin)) {
+            sessionStorage.setItem('tc_pin', pin);
+        } else if (pin !== null) {
+            alert('비밀번호는 4자리 숫자여야 합니다.');
+            return null;
+        } else {
+            return null;
+        }
+    }
+    return pin;
+}
+
+async function editPlan(id) {
+    const pin = getPin();
+    if (!pin) return;
+
+    const plan = constructionData.find(p => p.id === id);
+    if (!plan) {
+        alert('해당 계획을 찾을 수 없습니다.');
+        return;
+    }
+
+    const newBlockdate = prompt('차단일자를 입력하세요 (YYYY-MM-DD):', plan.blockdate);
+    if (newBlockdate === null) return;
+
+    const newReason = prompt('사유를 입력하세요:', plan.reason || '');
+    if (newReason === null) return;
+
+    try {
+        const { data, error } = await supabaseClient
+            .rpc('update_plan_with_pin', {
+                p_id: id,
+                p_pin: pin,
+                p_blockdate: newBlockdate,
+                p_reason: newReason
+            });
+
+        if (error) throw error;
+
+        alert('수정이 완료되었습니다.');
+        await refreshData();
+        const selectedDate = searchDateInput.value;
+        const selectedEmployee = searchEmployeeInput.value.trim();
+        displayResults(filterData(selectedDate, selectedEmployee), selectedDate, selectedEmployee);
+    } catch (error) {
+        if (error.message && error.message.includes('비밀번호가 일치하지 않습니다')) {
+            alert('비밀번호가 일치하지 않습니다.');
+            sessionStorage.removeItem('tc_pin');
+        } else {
+            alert('수정 중 오류가 발생했습니다: ' + error.message);
+        }
+    }
+}
+
+async function deletePlan(id) {
+    const pin = getPin();
+    if (!pin) return;
+
+    if (!confirm('정말 삭제하시겠습니까?')) return;
+
+    try {
+        const { data, error } = await supabaseClient
+            .rpc('delete_plan_with_pin', {
+                p_id: id,
+                p_pin: pin
+            });
+
+        if (error) throw error;
+
+        alert('삭제가 완료되었습니다.');
+        await refreshData();
+        const selectedDate = searchDateInput.value;
+        const selectedEmployee = searchEmployeeInput.value.trim();
+        displayResults(filterData(selectedDate, selectedEmployee), selectedDate, selectedEmployee);
+    } catch (error) {
+        if (error.message && error.message.includes('비밀번호가 일치하지 않습니다')) {
+            alert('비밀번호가 일치하지 않습니다.');
+            sessionStorage.removeItem('tc_pin');
+        } else {
+            alert('삭제 중 오류가 발생했습니다: ' + error.message);
+        }
+    }
 }
 
 // Hide all sections

@@ -146,6 +146,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         data.workers = parseInt(data.workers) || 0;
         data.signcar = parseInt(data.signcar) || 0;
         data.workcar = parseInt(data.workcar) || 0;
+
+        // 2-1. PIN 검증 및 포맷팅
+        const pinValue = String(data.pin).trim();
+        if (!pinValue || !/^\d{4}$/.test(pinValue)) {
+            alert('비밀번호는 4자리 숫자로 입력해주세요.');
+            document.getElementById('pin').focus();
+            return;
+        }
+        data.pin = pinValue;
         
         console.log('제출된 데이터:', data);
         
@@ -181,7 +190,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 throw error;
             }
 
-            alert('교통차단 계획이 성공적으로 등록되었습니다.');
+            sessionStorage.setItem('tc_pin', data.pin);
+            alert('등록 완료. 수정/삭제 비밀번호는 ' + data.pin + ' 입니다.');
             window.location.href = 'index.html'; // 저장 성공 후 메인 목록 화면으로 이동
         } catch (error) {
             console.error('Error inserting data:', error);
