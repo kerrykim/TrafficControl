@@ -4,18 +4,8 @@ let constructionData = [];
 // Function to load data from Supabase
 async function loadDataFromSupabase() {
     try {
-        // 1달(30일) 이전 데이터는 클라이언트 측에서 로드할 때 삭제 요청을 트리거하여 자동 제거
-        const oneMonthAgo = new Date();
-        oneMonthAgo.setDate(oneMonthAgo.getDate() - 30);
-        const cutoffDateStr = oneMonthAgo.toISOString().split('T')[0];
-        
-        // 백그라운드에서 오래된 데이터 삭제 (기다리지 않음)
-        supabaseClient.from('traffic_plans')
-            .delete()
-            .lt('blockdate', cutoffDateStr)
-            .then(({ error }) => {
-                if(error) console.error("오래된 데이터 삭제 실패:", error);
-            });
+        // 오래된 데이터 정리는 백엔드(Supabase 스케줄 작업)에서 처리하고,
+        // 프론트는 조회만 담당한다.
 
         // 데이터 조회 (차단일자 및 차단시간 빠른 순 정렬)
         const { data, error } = await supabaseClient
