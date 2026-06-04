@@ -1,54 +1,52 @@
-document.addEventListener('DOMContentLoaded', () => {
+async function fetchHolidays() {
+    try {
+        const currentYear = new Date().getFullYear();
+        const { data, error } = await supabaseClient
+            .from('korean_holidays')
+            .select('holiday_date, holiday_year')
+            .gte('holiday_year', currentYear)
+            .lte('holiday_year', currentYear + 1);
+
+        if (error) throw error;
+        if (data && data.length > 0) {
+            return new Set(data.map(row => row.holiday_date));
+        }
+    } catch (err) {
+        console.warn('공휴일 데이터 로드 실패, 주말만 제외합니다:', err);
+    }
+    return new Set();
+}
+
+function computeNextBusinessDay(holidays) {
+    const now = new Date();
+    let nextDate = new Date(now);
+    nextDate.setDate(nextDate.getDate() + 1);
+
+    while (true) {
+        const dayOfWeek = nextDate.getDay();
+        const tzOffset = nextDate.getTimezoneOffset() * 60000;
+        const dateStr = new Date(nextDate.getTime() - tzOffset).toISOString().split('T')[0];
+
+        if (dayOfWeek === 0 || dayOfWeek === 6 || holidays.has(dateStr)) {
+            nextDate.setDate(nextDate.getDate() + 1);
+        } else {
+            return dateStr;
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
     const registerForm = document.getElementById('registerForm');
-    
-    // 기본 날짜를 다음 영업일로 설정 (대한민국 기준, 주말 및 공휴일 제외)
+
     const dateInput = document.getElementById('blockdate');
     if (dateInput) {
         const now = new Date();
-        
-        // 오늘 이전 날짜 선택 불가능하게 만들기 (min 속성 설정)
         const tzOffsetToday = now.getTimezoneOffset() * 60000;
         const todayStr = new Date(now.getTime() - tzOffsetToday).toISOString().split('T')[0];
         dateInput.setAttribute('min', todayStr);
-        
-        let nextDate = new Date(now);
-        
-        // 알려진 대한민국 공휴일 (예: 2026년 기준)
-        // 필요시 매년 업데이트하거나 공공데이터 API를 연동하여 사용할 수 있습니다.
-        const krHolidays = [
-            "2026-01-01", // 신정
-            "2026-02-16", "2026-02-17", "2026-02-18", // 설날 연휴
-            "2026-03-01", "2026-03-02", // 삼일절 및 대체공휴일
-            "2026-05-05", // 어린이날
-            "2026-05-24", "2026-05-25", // 부처님오신날 및 대체공휴일
-            "2026-06-06", // 현충일
-            "2026-08-15", // 광복절
-            "2026-09-24", "2026-09-25", "2026-09-26", "2026-09-28", // 추석 연휴 및 대체공휴일
-            "2026-10-03", // 개천절
-            "2026-10-09", // 한글날
-            "2026-12-25"  // 기독탄신일(성탄절)
-        ];
-        
-        // 내일부터 검사 시작
-        nextDate.setDate(nextDate.getDate() + 1);
-        
-        while (true) {
-            const dayOfWeek = nextDate.getDay(); // 0: 일요일, 6: 토요일
-            
-            // 현지 타임존 오프셋을 반영하여 YYYY-MM-DD 포맷 가져오기
-            const tzOffset = nextDate.getTimezoneOffset() * 60000;
-            const dateStr = new Date(nextDate.getTime() - tzOffset).toISOString().split('T')[0];
-            
-            // 주말이거나 지정된 공휴일 목록에 포함되어 있다면
-            if (dayOfWeek === 0 || dayOfWeek === 6 || krHolidays.includes(dateStr)) {
-                // 하루를 더하고 다시 검사
-                nextDate.setDate(nextDate.getDate() + 1);
-            } else {
-                // 평일이면서 공휴일이 아니면 (영업일이면) 종료
-                dateInput.value = dateStr;
-                break;
-            }
-        }
+
+        const holidays = await fetchHolidays();
+        dateInput.value = computeNextBusinessDay(holidays);
     }
 
     // 시간 선택 드롭다운 30분 단위 초기화
