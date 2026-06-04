@@ -16,10 +16,12 @@ const tableBody = document.getElementById('tableBody');
 document.addEventListener('DOMContentLoaded', async function() {
     setupEventListeners();
     setDefaultDate();
+    setupModalTimeOptions();
+    setupEditForm();
     
-    // Load initial data from Google Sheets
+    // Load initial data
     try {
-        await loadDataFromGoogleSheets();
+        await refreshData();
         console.log('Initial data loaded successfully');
     } catch (error) {
         console.error('Failed to load initial data:', error);
@@ -285,90 +287,138 @@ function generateTableRows(results) {
     });
 }
 
-function getPin() {
-    let pin = sessionStorage.getItem('tc_pin');
-    if (!pin) {
-        pin = prompt('수정/삭제 비밀번호 (4자리 숫자)를 입력하세요.');
-        if (pin && /^\d{4}$/.test(pin)) {
-            sessionStorage.setItem('tc_pin', pin);
-        } else if (pin !== null) {
-            alert('비밀번호는 4자리 숫자여야 합니다.');
-            return null;
-        } else {
-            return null;
-        }
+function setupModalTimeOptions() {
+    const timeStart = document.getElementById('edit_chadan_start');
+    const timeEnd = document.getElementById('edit_chadan_end');
+    if (!timeStart || !timeEnd) return;
+    let opts = '<option value="">시간 선택</option>';
+    for (let i = 0; i < 24; i++) {
+        const h = i.toString().padStart(2, '0');
+        opts += `<option value="${h}:00">${h}:00</option>`;
+        opts += `<option value="${h}:30">${h}:30</option>`;
     }
-    return pin;
+    timeStart.innerHTML = opts;
+    timeEnd.innerHTML = opts;
+}
+
+function setupEditForm() {
+    const form = document.getElementById('editForm');
+    if (!form) return;
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('edit_id').value;
+        const pin = sessionStorage.getItem('tc_pin');
+        if (!pin) { alert('비밀번호 인증이 필요합니다.'); return; }
+
+        const formData = {
+            p_id: parseInt(id), p_pin: pin,
+            p_blockdate: document.getElementById('edit_blockdate').value,
+            p_const_name: document.getElementById('edit_const_name').value,
+            p_direction: document.getElementById('edit_direction').value,
+            p_ieejung: document.getElementById('edit_ieejung').value,
+            p_chadantime: (document.getElementById('edit_chadan_start').value || '00:00') + ' ~ ' + (document.getElementById('edit_chadan_end').value || '00:00'),
+            p_chadan: document.getElementById('edit_chadan').value,
+            p_workers: parseInt(document.getElementById('edit_workers').value) || 0,
+            p_signcar: parseInt(document.getElementById('edit_signcar').value) || 0,
+            p_workcar: parseInt(document.getElementById('edit_workcar').value) || 0,
+            p_contractee: document.getElementById('edit_contractee').value,
+            p_employee: document.getElementById('edit_employee').value,
+            p_employeephone: document.getElementById('edit_employeephone').value,
+            p_sitemanager: document.getElementById('edit_sitemanager').value,
+            p_smcellphone: document.getElementById('edit_smcellphone').value,
+            p_reason: document.getElementById('edit_reason').value,
+            p_new_pin: document.getElementById('edit_new_pin').value
+        };
+
+        try {
+            const { data, error } = await supabaseClient.rpc('update_plan_full_with_pin', formData);
+            if (error) throw error;
+            alert('수정이 완료되었습니다.');
+            closeEditModal();
+            await refreshData();
+            const d = searchDateInput.value, e = searchEmployeeInput.value.trim();
+            displayResults(filterData(d, e), d, e);
+        } catch (err) {
+            if (err.message && err.message.includes('비밀번호가 일치하지')) {
+                alert('비밀번호가 일치하지 않습니다.');
+                sessionStorage.removeItem('tc_pin');
+            } else {
+                alert('수정 중 오류: ' + err.message);
+            }
+        }
+    });
+}
+
+function openEditModal(plan) {
+    document.getElementById('edit_id').value = plan.id;
+    document.getElementById('edit_blockdate').value = plan.blockdate || '';
+    document.getElementById('edit_const_name').value = plan.const_name || '';
+    document.getElementById('edit_direction').value = plan.direction || '';
+    document.getElementById('edit_ieejung').value = plan.ieejung || '';
+    document.getElementById('edit_chadan_start').value = plan.chadan_start || '';
+    document.getElementById('edit_chadan_end').value = plan.chadan_end || '';
+    document.getElementById('edit_chadan').value = plan.chadan || '';
+    document.getElementById('edit_workers').value = plan.workers || 0;
+    document.getElementById('edit_signcar').value = plan.signcar || 0;
+    document.getElementById('edit_workcar').value = plan.workcar || 0;
+    document.getElementById('edit_contractee').value = plan.contractee || '';
+    document.getElementById('edit_employee').value = plan.employee || '';
+    document.getElementById('edit_employeephone').value = plan.employeephone || '';
+    document.getElementById('edit_sitemanager').value = plan.sitemanager || '';
+    document.getElementById('edit_smcellphone').value = plan.smcellphone || '';
+    document.getElementById('edit_reason').value = plan.reason || '';
+    document.getElementById('edit_new_pin').value = '';
+    document.getElementById('editModal').classList.remove('hidden');
+}
+
+function closeEditModal() {
+    document.getElementById('editModal').classList.add('hidden');
 }
 
 async function editPlan(id) {
-    const pin = getPin();
-    if (!pin) return;
-
-    const plan = constructionData.find(p => p.id === id);
-    if (!plan) {
-        alert('해당 계획을 찾을 수 없습니다.');
+    const pin = prompt('수정 비밀번호 (4자리 숫자)를 입력하세요.');
+    if (!pin || !/^\d{4}$/.test(pin)) {
+        if (pin !== null) alert('비밀번호는 4자리 숫자여야 합니다.');
         return;
     }
 
-    const newBlockdate = prompt('차단일자를 입력하세요 (YYYY-MM-DD):', plan.blockdate);
-    if (newBlockdate === null) return;
-
-    const newReason = prompt('사유를 입력하세요:', plan.reason || '');
-    if (newReason === null) return;
+    const plan = constructionData.find(p => p.id === id);
+    if (!plan) { alert('해당 계획을 찾을 수 없습니다.'); return; }
 
     try {
-        const { data, error } = await supabaseClient
-            .rpc('update_plan_with_pin', {
-                p_id: id,
-                p_pin: pin,
-                p_blockdate: newBlockdate,
-                p_reason: newReason
-            });
-
+        const { data, error } = await supabaseClient.rpc('verify_pin', { p_id: id, p_pin: pin });
         if (error) throw error;
-
-        alert('수정이 완료되었습니다.');
-        await refreshData();
-        const selectedDate = searchDateInput.value;
-        const selectedEmployee = searchEmployeeInput.value.trim();
-        displayResults(filterData(selectedDate, selectedEmployee), selectedDate, selectedEmployee);
-    } catch (error) {
-        if (error.message && error.message.includes('비밀번호가 일치하지 않습니다')) {
+        openEditModal(plan);
+    } catch (err) {
+        if (err.message && err.message.includes('비밀번호가 일치하지')) {
             alert('비밀번호가 일치하지 않습니다.');
-            sessionStorage.removeItem('tc_pin');
         } else {
-            alert('수정 중 오류가 발생했습니다: ' + error.message);
+            alert('인증 중 오류: ' + err.message);
         }
     }
 }
 
 async function deletePlan(id) {
-    const pin = getPin();
-    if (!pin) return;
+    const pin = prompt('삭제 비밀번호 (4자리 숫자)를 입력하세요.');
+    if (!pin || !/^\d{4}$/.test(pin)) {
+        if (pin !== null) alert('비밀번호는 4자리 숫자여야 합니다.');
+        return;
+    }
 
     if (!confirm('정말 삭제하시겠습니까?')) return;
 
     try {
-        const { data, error } = await supabaseClient
-            .rpc('delete_plan_with_pin', {
-                p_id: id,
-                p_pin: pin
-            });
-
+        const { data, error } = await supabaseClient.rpc('delete_plan_with_pin', { p_id: id, p_pin: pin });
         if (error) throw error;
-
         alert('삭제가 완료되었습니다.');
         await refreshData();
-        const selectedDate = searchDateInput.value;
-        const selectedEmployee = searchEmployeeInput.value.trim();
-        displayResults(filterData(selectedDate, selectedEmployee), selectedDate, selectedEmployee);
-    } catch (error) {
-        if (error.message && error.message.includes('비밀번호가 일치하지 않습니다')) {
+        const d = searchDateInput.value, e = searchEmployeeInput.value.trim();
+        displayResults(filterData(d, e), d, e);
+    } catch (err) {
+        if (err.message && err.message.includes('비밀번호가 일치하지')) {
             alert('비밀번호가 일치하지 않습니다.');
-            sessionStorage.removeItem('tc_pin');
         } else {
-            alert('삭제 중 오류가 발생했습니다: ' + error.message);
+            alert('삭제 중 오류: ' + err.message);
         }
     }
 }

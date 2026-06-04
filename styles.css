@@ -453,12 +453,10 @@ td.action-buttons {
         size: A4 landscape;
         margin: 15mm;
     }
-    
     * {
         -webkit-print-color-adjust: exact !important;
         color-adjust: exact !important;
     }
-    
     body {
         background: white !important;
         color: black !important;
@@ -468,38 +466,12 @@ td.action-buttons {
         margin: 0 !important;
         padding: 0 !important;
     }
-
-    /* 인쇄시 숨길 요소들 */
-    header,
-    .search-section,
-    footer,
-    .loading,
-    .no-results {
+    header, .search-section, footer, .loading, .no-results {
         display: none !important;
     }
-
-    .container {
-        max-width: none !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        min-height: auto !important;
-    }
-
-    .results-section {
-        background: white !important;
-        border-radius: 0 !important;
-        padding: 0 !important;
-        box-shadow: none !important;
-        margin: 0 !important;
-    }
-
-    .results-header {
-        margin-bottom: 15px !important;
-        padding-bottom: 10px !important;
-        border-bottom: 2px solid #333 !important;
-        display: block !important;
-        text-align: center !important;
-    }
+    .container { max-width: none !important; margin: 0 !important; padding: 0 !important; min-height: auto !important; }
+    .results-section { background: white !important; border-radius: 0 !important; padding: 0 !important; box-shadow: none !important; margin: 0 !important; }
+    .results-header { margin-bottom: 15px !important; padding-bottom: 10px !important; border-bottom: 2px solid #333 !important; display: block !important; text-align: center !important; }
     
     .results-header::before {
         content: "인천국제공항고속도로 교통차단 계획";
@@ -626,7 +598,41 @@ td.action-buttons {
     }
 
     /* 모바일용 스크롤 힌트 숨기기 */
-    .table-container::after {
-        display: none !important;
-    }
+    .table-container::after { display: none !important; }
 }
+
+/* Modal styles */
+.modal {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5); z-index: 1000;
+    display: flex; justify-content: center; align-items: flex-start;
+    overflow-y: auto; padding: 40px 20px;
+}
+.modal.hidden { display: none !important; }
+.modal-content {
+    background: white; border-radius: 15px; padding: 30px;
+    width: 100%; max-width: 800px; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    position: relative;
+}
+.modal-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 20px; border-bottom: 2px solid #e1e5e9; padding-bottom: 15px;
+}
+.modal-header h3 { margin: 0; color: #333; font-size: 1.5rem; }
+.close-btn {
+    background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #6c757d;
+    padding: 5px 10px; border-radius: 50%; transition: all 0.2s;
+}
+.close-btn:hover { background: #f8f9fa; color: #333; }
+.modal-form input, .modal-form select {
+    width: 100%; padding: 12px 15px; border: 2px solid #e1e5e9;
+    border-radius: 8px; font-size: 1rem; transition: border-color 0.3s;
+}
+.modal-form input:focus, .modal-form select:focus {
+    outline: none; border-color: #667eea; box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+}
+.form-section-title {
+    margin-bottom: 15px; margin-top: 20px; border-bottom: 2px solid #e1e5e9;
+    padding-bottom: 10px; color: #495057; font-weight: 600;
+}
+.form-section-title:first-child { margin-top: 0; }

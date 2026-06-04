@@ -111,9 +111,68 @@
         <p>Made by 김현호</p>
     </footer>
 
+    <!-- Edit Modal -->
+    <div id="editModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-edit"></i> 교통차단 계획 수정</h3>
+                <button class="close-btn" onclick="closeEditModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <form id="editForm" class="modal-form">
+                <input type="hidden" id="edit_id">
+                <div class="form-section-title">기본 정보</div>
+                <div class="search-row">
+                    <div class="search-field"><label>차단일자 *</label><input type="date" id="edit_blockdate" required></div>
+                    <div class="search-field"><label>공사명 *</label><input type="text" id="edit_const_name" required></div>
+                </div>
+                <div class="search-row">
+                    <div class="search-field"><label>방향 *</label>
+                        <select id="edit_direction" required>
+                            <option value="">선택</option><option value="공항방향">공항방향</option><option value="서울방향">서울방향</option><option value="양방향">양방향</option>
+                        </select>
+                    </div>
+                    <div class="search-field"><label>위치 *</label><input type="text" id="edit_ieejung" required></div>
+                </div>
+                <div class="form-section-title">차단 상세</div>
+                <div class="search-row">
+                    <div class="search-field"><label>시작시간 *</label><select id="edit_chadan_start" required></select></div>
+                    <div class="search-field"><label>종료시간 *</label><select id="edit_chadan_end" required></select></div>
+                </div>
+                <div class="search-row">
+                    <div class="search-field"><label>차단구간 *</label><input type="text" id="edit_chadan" required></div>
+                </div>
+                <div class="form-section-title">투입 현황</div>
+                <div class="search-row">
+                    <div class="search-field"><label>작업자 수</label><input type="number" id="edit_workers" min="0"></div>
+                    <div class="search-field"><label>신호차 댓수</label><input type="number" id="edit_signcar" min="0"></div>
+                    <div class="search-field"><label>작업차 댓수</label><input type="number" id="edit_workcar" min="0"></div>
+                    <div class="search-field"><label>계약업체</label><input type="text" id="edit_contractee"></div>
+                </div>
+                <div class="form-section-title">연락처 정보</div>
+                <div class="search-row">
+                    <div class="search-field"><label>담당자 *</label><input type="text" id="edit_employee" required></div>
+                    <div class="search-field"><label>담당자 연락처 *</label><input type="tel" id="edit_employeephone" required></div>
+                </div>
+                <div class="search-row">
+                    <div class="search-field"><label>현장관리자</label><input type="text" id="edit_sitemanager"></div>
+                    <div class="search-field"><label>관리자 연락처</label><input type="tel" id="edit_smcellphone"></div>
+                </div>
+                <div class="form-section-title">수정 정보</div>
+                <div class="search-row">
+                    <div class="search-field"><label>사유 *</label><input type="text" id="edit_reason" required></div>
+                    <div class="search-field"><label>새 비밀번호 (변경 시)</label><input type="number" id="edit_new_pin" min="0" max="9999" placeholder="공란이면 기존 유지"></div>
+                </div>
+                <div class="button-group">
+                    <button type="submit" class="search-btn"><i class="fas fa-save"></i> 저장하기</button>
+                    <button type="button" class="clear-btn" onclick="closeEditModal()"><i class="fas fa-times"></i> 취소</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabaseConfig.js"></script>
-    <script src="data.js?v=4"></script>
-    <script src="script.js?v=4"></script>
+    <script src="data.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
