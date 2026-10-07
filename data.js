@@ -14,9 +14,10 @@ async function loadDataFromSupabase() {
         const cutoffStr = new Date(cutoff.getTime() - tzOffset).toISOString().split('T')[0];
 
         // 데이터 조회 (차단일자 및 차단시간 빠른 순 정렬, 동일 시간대는 등록 순)
+        // pin은 공개 조회 대상이 아니므로 필요한 컬럼만 명시한다.
         const { data, error } = await supabaseClient
             .from('traffic_plans')
-            .select('*')
+            .select('id, blockdate, const_name, direction, ieejung, chadantime, chadan, workers, signcar, workcar, contractee, employee, employeephone, sitemanager, smcellphone, reason')
             .gte('blockdate', cutoffStr)
             .order('blockdate', { ascending: true })
             .order('chadantime', { ascending: true })
