@@ -70,7 +70,7 @@ async function handleSearch() {
     showLoading();
     
     try {
-        // Always refresh data from Google Sheets before searching
+        // Always refresh data from Supabase before searching
         await refreshData();
         
         const results = filterData(selectedDate, selectedEmployee);
@@ -125,7 +125,7 @@ async function handleShowByDate() {
     showLoading();
     
     try {
-        // Refresh data from Google Sheets before showing data
+        // Refresh data from Supabase before showing data
         await refreshData();
         
         // Filter data by selected date
