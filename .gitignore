@@ -2,6 +2,9 @@
 CLAUDE.md
 .claude/
 
+# 문서 (로컬 전용)
+README.md
+
 # bkit
 .bkit/
 
