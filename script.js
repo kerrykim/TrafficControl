@@ -268,15 +268,15 @@ function generateTableRows(results) {
             <td>${escapeHtml(item.direction)}</td>
             <td>${escapeHtml(item.ieejung)}</td>
             <td>${escapeHtml(item.chadantime)}</td>
-            <td>${formatChadan(item.chadan)}</td>
+            <td>${escapeHtml(formatChadan(item.chadan))}</td>
             <td class="workers-count">${item.workers}</td>
             <td class="vehicle-count">${item.signcar}</td>
             <td class="vehicle-count">${item.workcar}</td>
             <td>${escapeHtml(item.employee)}</td>
-            <td class="phone">${formatPhone(item.employeephone)}</td>
+            <td class="phone">${escapeHtml(formatPhone(item.employeephone))}</td>
             <td>${escapeHtml(item.contractee)}</td>
             <td>${escapeHtml(item.sitemanager)}</td>
-            <td class="phone">${formatPhone(item.smcellphone)}</td>
+            <td class="phone">${escapeHtml(formatPhone(item.smcellphone))}</td>
             <td class="action-buttons">
                 <button class="edit-btn" onclick="editPlan(${item.id})"><i class="fas fa-edit"></i> 수정</button>
                 <button class="delete-btn" onclick="deletePlan(${item.id})"><i class="fas fa-trash"></i> 삭제</button>
