@@ -301,13 +301,23 @@ function setupModalTimeOptions() {
     timeEnd.innerHTML = opts;
 }
 
+// editPlan에서 방금 인증에 성공한 PIN (수정 저장 시 사용)
+let verifiedPin = null;
+
+function setTimeSelectValue(select, value) {
+    if (value && !Array.from(select.options).some(o => o.value === value)) {
+        select.add(new Option(value, value));
+    }
+    select.value = value;
+}
+
 function setupEditForm() {
     const form = document.getElementById('editForm');
     if (!form) return;
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         const id = document.getElementById('edit_id').value;
-        const pin = sessionStorage.getItem('tc_pin');
+        const pin = verifiedPin;
         if (!pin) { alert('비밀번호 인증이 필요합니다.'); return; }
 
         const formData = {
@@ -341,7 +351,7 @@ function setupEditForm() {
         } catch (err) {
             if (err.message && err.message.includes('비밀번호가 일치하지')) {
                 alert('비밀번호가 일치하지 않습니다.');
-                sessionStorage.removeItem('tc_pin');
+                verifiedPin = null;
             } else {
                 alert('수정 중 오류: ' + err.message);
             }
@@ -355,8 +365,9 @@ function openEditModal(plan) {
     document.getElementById('edit_const_name').value = plan.const_name || '';
     document.getElementById('edit_direction').value = plan.direction || '';
     document.getElementById('edit_ieejung').value = plan.ieejung || '';
-    document.getElementById('edit_chadan_start').value = plan.chadan_start || '';
-    document.getElementById('edit_chadan_end').value = plan.chadan_end || '';
+    const [chadanStart = '', chadanEnd = ''] = (plan.chadantime || '').split('~').map(t => t.trim());
+    setTimeSelectValue(document.getElementById('edit_chadan_start'), chadanStart);
+    setTimeSelectValue(document.getElementById('edit_chadan_end'), chadanEnd);
     document.getElementById('edit_chadan').value = plan.chadan || '';
     document.getElementById('edit_workers').value = plan.workers || 0;
     document.getElementById('edit_signcar').value = plan.signcar || 0;
@@ -373,6 +384,7 @@ function openEditModal(plan) {
 
 function closeEditModal() {
     document.getElementById('editModal').classList.add('hidden');
+    verifiedPin = null;
 }
 
 async function editPlan(id) {
@@ -388,6 +400,7 @@ async function editPlan(id) {
     try {
         const { data, error } = await supabaseClient.rpc('verify_pin', { p_id: id, p_pin: pin });
         if (error) throw error;
+        verifiedPin = pin;
         openEditModal(plan);
     } catch (err) {
         if (err.message && err.message.includes('비밀번호가 일치하지')) {

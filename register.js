@@ -190,7 +190,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 throw error;
             }
 
-            sessionStorage.setItem('tc_pin', data.pin);
             alert('등록 완료. 수정/삭제 비밀번호는 ' + data.pin + ' 입니다.');
             window.location.href = 'index.html'; // 저장 성공 후 메인 목록 화면으로 이동
         } catch (error) {
