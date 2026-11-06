@@ -269,9 +269,9 @@ function generateTableRows(results) {
             <td>${escapeHtml(item.ieejung)}</td>
             <td>${escapeHtml(item.chadantime)}</td>
             <td>${escapeHtml(formatChadan(item.chadan))}</td>
-            <td class="workers-count">${item.workers}</td>
-            <td class="vehicle-count">${item.signcar}</td>
-            <td class="vehicle-count">${item.workcar}</td>
+            <td class="workers-count">${formatCount(item.workers)}</td>
+            <td class="vehicle-count">${formatCount(item.signcar)}</td>
+            <td class="vehicle-count">${formatCount(item.workcar)}</td>
             <td>${escapeHtml(item.employee)}</td>
             <td class="phone">${escapeHtml(formatPhone(item.employeephone))}</td>
             <td>${escapeHtml(item.contractee)}</td>
@@ -542,6 +542,12 @@ function formatChadan(chadan) {
     }
     
     return chadan;
+}
+
+// 숫자 칸 표시: 0은 그대로 보이고, 숫자가 아닌 값이 저장돼 있어도 이스케이프되도록 처리
+function formatCount(value) {
+    if (value === null || value === undefined || value === '') return '-';
+    return escapeHtml(String(value));
 }
 
 // Escape HTML to prevent XSS
