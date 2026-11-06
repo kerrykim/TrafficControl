@@ -304,6 +304,15 @@ function setupModalTimeOptions() {
 // editPlan에서 방금 인증에 성공한 PIN (수정 저장 시 사용)
 let verifiedPin = null;
 
+// PIN RPC는 {ok:false, message}로 실패를 알린다 (PIN 오류, 입력 정지 등).
+// 구버전 RPC(예외로 실패 전달)와도 호환되도록 ok === false일 때만 실패로 본다.
+function pinRpcFailure(data) {
+    if (data && !Array.isArray(data) && typeof data === 'object' && data.ok === false) {
+        return data.message || '비밀번호 확인에 실패했습니다.';
+    }
+    return null;
+}
+
 function setTimeSelectValue(select, value) {
     if (value && !Array.from(select.options).some(o => o.value === value)) {
         select.add(new Option(value, value));
@@ -343,6 +352,13 @@ function setupEditForm() {
         try {
             const { data, error } = await supabaseClient.rpc('update_plan_full_with_pin', formData);
             if (error) throw error;
+            const failure = pinRpcFailure(data);
+            if (failure) {
+                alert(failure);
+                verifiedPin = null;
+                closeEditModal();
+                return;
+            }
             alert('수정이 완료되었습니다.');
             closeEditModal();
             await refreshData();
@@ -400,6 +416,8 @@ async function editPlan(id) {
     try {
         const { data, error } = await supabaseClient.rpc('verify_pin', { p_id: id, p_pin: pin });
         if (error) throw error;
+        const failure = pinRpcFailure(data);
+        if (failure) { alert(failure); return; }
         verifiedPin = pin;
         openEditModal(plan);
     } catch (err) {
@@ -423,6 +441,8 @@ async function deletePlan(id) {
     try {
         const { data, error } = await supabaseClient.rpc('delete_plan_with_pin', { p_id: id, p_pin: pin });
         if (error) throw error;
+        const failure = pinRpcFailure(data);
+        if (failure) { alert(failure); return; }
         alert('삭제가 완료되었습니다.');
         await refreshData();
         const d = searchDateInput.value, e = searchEmployeeInput.value.trim();
