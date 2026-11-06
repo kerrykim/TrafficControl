@@ -156,7 +156,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         data.pin = pinValue;
         
-        console.log('제출된 데이터:', data);
         
         // 3. 중복 데이터 체크 (동일 날짜, 동일 방향 검증)
         try {
